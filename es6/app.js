@@ -2,7 +2,7 @@ import View from './framework/View';
 import Controller from './framework/Controller';
 import Service from './framework/Service';
 
-import ExchangeModel from './Models/ExchangeModel';
+import ExchangeModel from './models/ExchangeModel';
 
 import ConnectionFactory from './services/ConnectionFactory';
 
