@@ -1,7 +1,7 @@
 import * as matchers from 'jest-jquery-matchers';
 const $ = require('jquery');
 
-import DataTable from './index';
+import DataTable from './DataTable';
 
 describe('Exchange table',()=>{
     const colInfo = [
@@ -24,7 +24,6 @@ describe('Exchange table',()=>{
     });
 
     it('should render a table when rendered', ()=> {
-
         expect(DataTable({})).toHaveTag('table');
     });
 
@@ -80,13 +79,36 @@ describe('Exchange table',()=>{
                 "age": 29,
                 "city": "pune"
             }
-
-        ]
+        ];
         
         const table = $(DataTable({colInfo, rowInfo})),
                 header = table.find('thead'),
                 tr = table.find('tr');
         expect(header.length).toBe(1);
         expect(tr.length).toBe(2);
+    });
+
+    it('should render a table sort by name when sortByCol value is provided', ()=> {
+        const rowInfo = [
+            {
+                "name": "Aniket",
+                "age": 30,
+                "city": "Pune"
+            },
+            {
+                "name": "Abhishek",
+                "age": 29,
+                "city": "pune"
+            }
+        ];
+        
+        const table = $(DataTable({colInfo, rowInfo, sortByCol : 'name'})),
+                header = table.find('thead'),
+                tr = table.find('tr'),
+                row1Name = $(tr[0]).find('td')[0],
+                row2Name = $(tr[1]).find('td')[0];
+        expect(tr.length).toBe(2);
+        expect($(row1Name).html()).toBe('Abhishek');
+        expect($(row2Name).html()).toBe('Aniket');
     });
 });

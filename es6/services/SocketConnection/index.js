@@ -1,6 +1,6 @@
-class StompService {
-    constructor(stompInstance, baseUrl) {
-        this.client = stompInstance.client(baseUrl);
+class SocketConnection {
+    constructor(socketInstance, baseUrl) {
+        this.client = socketInstance.client(baseUrl);
     }
 
     subscribe(url, cb) {
@@ -14,4 +14,4 @@ class StompService {
     }
 }
 
-export default StompService;
+export default SocketConnection;

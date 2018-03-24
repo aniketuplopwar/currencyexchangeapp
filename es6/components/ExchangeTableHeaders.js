@@ -18,10 +18,10 @@ const EXCHANGE_TABLE_HEADERS = [
     {
         label: 'Best Ask Last Changed',
         dataField: 'lastChangeBid'
-    }
-    ,{
-        label: 'Trend',
-        dataField: 'trend'
+    },
+    {
+        label: 'Mid Price Graph',
+        dataField: 'midPriceGraph'
     }
   ];
 
