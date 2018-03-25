@@ -26,20 +26,23 @@ export default class ExchangeModel extends Model {
         })
     }
 
-    filterMidPrice(){
+    filterMidPrice(currentTime, maxTime){
         Object.keys(this.state.currencyPairMap).map((key)=>{
             const currPair = this.state.currencyPairMap[key];
             currPair.midPriceWithTimeStamp = currPair.midPriceWithTimeStamp.filter((midPrice)=>{
-                                                return (new Date().getTime() - midPrice.timestamp) < 30000;
+                                                return (currentTime - midPrice.timestamp) < maxTime;
                                             });
             currPair.midPrice = this.getMidPriceValueArr(currPair.midPriceWithTimeStamp);
         });
         this.notifyAll(this.state);
     }
 
-    resetFilterInterval(){
-        if(this.filterInterVal) clearInterval(this.filterInterVal);
-        this.filterInterVal = setInterval(this.filterMidPrice.bind(this), 1000);
+    setFilterInterval(){
+        if(!this.filterInterVal) {
+            setInterval(() => {
+                this.filterMidPrice(new Date().getTime(), 30000);
+            }, 1000);
+        }
     }
 
     updateModel(message){
@@ -49,7 +52,7 @@ export default class ExchangeModel extends Model {
         if(!existingStateForPair){
             currencyPair['midPriceWithTimeStamp'] = [];
         }else{
-            currencyPair['midPriceWithTimeStamp'] = existingStateForPair['midPriceWithTimeStamp'];;
+            currencyPair['midPriceWithTimeStamp'] = existingStateForPair['midPriceWithTimeStamp'];
         }
 
         currencyPair['midPriceWithTimeStamp'].push(this.calculateMidPrice(currencyPair.bestBid, currencyPair.bestAsk));
@@ -57,10 +60,6 @@ export default class ExchangeModel extends Model {
         this.state.currencyPairMap[currencyPair.name] = currencyPair;
 
         this.updateCurrencyPairArray();
-
-        this.resetFilterInterval();
-
+        this.setFilterInterval();
     }
-
-
-}   
+}

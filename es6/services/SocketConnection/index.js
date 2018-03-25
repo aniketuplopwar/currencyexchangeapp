@@ -7,7 +7,7 @@ class SocketConnection {
         this.client.subscribe(url, cb);
     }
 
-    connect() {
+    initialize() {
         return new Promise((resolve, reject) => {
             this.client.connect({}, resolve);
         });

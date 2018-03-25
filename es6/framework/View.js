@@ -1,5 +1,3 @@
-import Component from './Component';
-
 export default class View {
     constructor(containerId){
         this.containerId = containerId;
@@ -10,7 +8,7 @@ export default class View {
     }
 
     prepareView() {
-        return new Component();
+        return {render:(content)=>{}};
     }
 
     render(content){

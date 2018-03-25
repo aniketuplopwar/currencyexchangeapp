@@ -18,7 +18,7 @@ class ExchangeTable {
         return DataTable({
                 colInfo: EXCHANGE_TABLE_HEADERS, 
                 rowInfo: rows, 
-                sortByCol: 'name'
+                sortByCol: 'lastChangeBid'
             });
     }
 }

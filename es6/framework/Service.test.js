@@ -9,10 +9,18 @@ describe('Service',()=>{
         connection = createMockConnection();
         topic = 'some-topic';
         service = new Service(connection, topic);
-    })
+    });
 
-    it('should subcribe to the given topic, on the given connection whe initialized',()=>{
+    it('should initialize connection when initialized', ()=>{
         service.init();
-        expect(connection.subscribe).toHaveBeenCalledWith('some-topic', service.notifyAll);
+        expect(connection.initialize).toHaveBeenCalled();
+    });
+
+    it('should subcribe to the given topic, on the given connection when connection is initialized',()=>{
+        service.init();
+        connection.initialize().then(()=>{
+            expect(connection.subscribe).toHaveBeenCalledWith('some-topic', service.notifyAll);
+        });
+
     })
 });

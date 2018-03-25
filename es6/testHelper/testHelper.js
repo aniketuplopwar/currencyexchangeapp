@@ -14,7 +14,8 @@ export const createMockObservable = ()=>{
 
 export const createMockView = ()=>{
     return {
-        render: jest.fn().mockImplementation((data)=>{})
+        render: jest.fn().mockImplementation((data)=>{}),
+        init: jest.fn().mockImplementation((data)=>{})
     }
 }
 
@@ -32,7 +33,11 @@ export const createMockService = ()=>{
 
 export const createMockConnection= ()=>{
     const connection = {};
-    connection.connect = jest.fn().mockImplementation(()=>{});
+    connection.initialize = jest.fn().mockImplementation(()=>{
+        return new Promise((resolve, reject)=>{
+            resolve();
+        })
+    });
     connection.subscribe = jest.fn().mockImplementation((topic, callback)=>{});
     return connection;
 }
@@ -53,5 +58,15 @@ export const createMockSparklineGraph = ()=>{
             };
         })
     }
-}
+};
+
+
+export const Component = ()=>{
+    this.render = (content)=>{
+        const componentElement = document.createElement('span');
+        componentElement.id = 'mock-component';
+        componentElement.innerHTML = content;
+        return componentElement;
+    }
+};
 

@@ -92,5 +92,26 @@ describe('Exchange Model', ()=>{
 
         expect(midPriceWithTimeStampArr.length).toBe(2);
         expect(typeof midPriceWithTimeStampArr[0]['timestamp']).toBe('number');
+    });
+
+    it('should remove mid price which was present more than prescribed time',()=>{
+        exchangeModel = new ExchangeModel(service);
+        exchangeModel.init();
+        let newState = {};
+        const subscriber = jest.fn().mockImplementation((state)=>{
+            newState = state;
+        });
+        exchangeModel.subscribe(subscriber);
+
+        service.onMessage({body:'{"name": "gbpusd", "bestBid": 2.0, "bestAsk": 4.0}'});
+
+        let timeAtTheTimeOfInsertion = new Date().getTime();
+        let currentTime = timeAtTheTimeOfInsertion + 101;
+        exchangeModel.filterMidPrice(currentTime, 100);
+        const midPriceWithTimeStampArr = newState.currencyPairMap['gbpusd']['midPriceWithTimeStamp'];
+
+        expect(midPriceWithTimeStampArr.length).toBe(0);
+
+
     })
 });

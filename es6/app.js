@@ -1,8 +1,6 @@
-import ConnectionFactory from './services/ConnectionFactory';
+import ConnectionFactory from './services/ServiceFactory';
 import ExchangeApp from './exchange-app/ExchangeApp';
-const socketInstance = ConnectionFactory.getStompInstance();
 
-socketInstance.connect().then(()=>{
-    const app = new ExchangeApp();
-    app.init(socketInstance);
-});
+const app = new ExchangeApp();
+
+app.init();

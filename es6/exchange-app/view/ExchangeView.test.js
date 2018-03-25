@@ -14,9 +14,6 @@ describe('ExchangeView', ()=>{
 
     it('should set Exchange Table as its component', ()=>{
         const exchangeView = new ExchangeView();
-        const sparklineGraph = exchangeView.prepareGraph();
-        const exchangeTable = exchangeView.prepareExchangeTable(sparklineGraph);
-
         exchangeView.prepareView();
         exchangeView.init();
 

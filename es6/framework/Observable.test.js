@@ -2,7 +2,7 @@ import Observable from './Observable';
 
 describe('Observable',()=>{
     
-    it('should notify the subscribed observer when notified',()=>{
+    it('should notify the subscribed observer when required',()=>{
         const observable = new Observable();
         const observer = jest.fn().mockImplementation(()=>{});
 
@@ -13,7 +13,7 @@ describe('Observable',()=>{
         expect(observer).toHaveBeenCalledWith('some message');
     });
 
-    it('should notify to all subscribed observers when notified',()=>{
+    it('should notify to all subscribed observers when required',()=>{
         const observable = new Observable();
         const observer1 = jest.fn().mockImplementation(()=>{});
         const observer2 = jest.fn().mockImplementation(()=>{});

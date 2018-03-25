@@ -23,15 +23,15 @@ describe("Stomp Service", ()=>{
         sampleStompService = new StompService(mockStomp, 'localhost');
     });
 
-    it('should attempt to connect to stomp server when stomp and url is provided',()=>{
+    it('should attempt to connect to stomp server when initialize',()=>{
         expect(client).toHaveBeenCalled();
-        sampleStompService.connect().then(()=>{
+        sampleStompService.initialize().then(()=>{
             expect(connectStomp).toHaveBeenCalled();
         });
     });
 
     it('should listen to server event when subscribed',()=>{
-        sampleStompService.connect();
+        sampleStompService.initialize();
         sampleStompService.subscribe('some-event', ()=>{});
 
         expect(subscribe).toHaveBeenCalled();
