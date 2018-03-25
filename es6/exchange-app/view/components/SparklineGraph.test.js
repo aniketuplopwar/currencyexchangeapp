@@ -1,5 +1,5 @@
 import SparklineGraph from './SparklineGraph';
-import {createMockSparklineGraph} from '../testHelper/testHelper';
+import {createMockSparklineGraph} from '../../../testHelper/testHelper';
 
 describe('Sparkline',()=>{
     it('should throw and error if Sparkline is not defined',()=>{

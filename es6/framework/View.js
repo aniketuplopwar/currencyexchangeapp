@@ -1,8 +1,18 @@
+import Component from './Component';
+
 export default class View {
-    constructor(component, containerId){
-        this.component = component;
+    constructor(containerId){
         this.containerId = containerId;
     }
+
+    init(){
+        this.component = this.prepareView();
+    }
+
+    prepareView() {
+        return new Component();
+    }
+
     render(content){
         const container = document.getElementById(this.containerId);
         container.innerHTML = '';

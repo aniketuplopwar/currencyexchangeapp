@@ -1,5 +1,5 @@
 import * as matchers from 'jest-jquery-matchers';
-import {createMockGraph} from '../testHelper/testHelper';
+import {createMockGraph} from '../../../testHelper/testHelper';
 
 import ExchangeTable from './ExchangeTable';
 import EXCHANGE_TABLE_HEADERS from './ExchangeTableHeaders';

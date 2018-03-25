@@ -1,4 +1,4 @@
-import {createMockService} from '../testHelper/testHelper';
+import {createMockService} from '../../testHelper/testHelper';
 import ExchangeModel from './ExchangeModel';
 describe('Exchange Model', ()=>{
     let exchangeModel,
@@ -72,8 +72,25 @@ describe('Exchange Model', ()=>{
         service.onMessage({body:'{"name": "gbpusd", "bestBid": 2.0, "bestAsk": 4.0}'});
         service.onMessage({body:'{"name": "gbpusd", "bestBid": 6.0, "bestAsk": 4.0}'});
         const midPriceArr = newState.currencyPairMap['gbpusd']['midPrice'];
+
         expect(midPriceArr.length).toBe(2);
         expect(Math.floor(midPriceArr[0])).toBe(3);
         expect(Math.floor(midPriceArr[1])).toBe(5);
     });
+
+    it('should store mid price with time stamp when receive a row information', ()=>{
+        exchangeModel = new ExchangeModel(service);
+        exchangeModel.init();
+        let newState = {};
+        const subscriber = jest.fn().mockImplementation((state)=>{
+            newState = state;
+        });
+        exchangeModel.subscribe(subscriber);
+        service.onMessage({body:'{"name": "gbpusd", "bestBid": 2.0, "bestAsk": 4.0}'});
+        service.onMessage({body:'{"name": "gbpusd", "bestBid": 6.0, "bestAsk": 4.0}'});
+        const midPriceWithTimeStampArr = newState.currencyPairMap['gbpusd']['midPriceWithTimeStamp'];
+
+        expect(midPriceWithTimeStampArr.length).toBe(2);
+        expect(typeof midPriceWithTimeStampArr[0]['timestamp']).toBe('number');
+    })
 });

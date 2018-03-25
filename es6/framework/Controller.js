@@ -7,6 +7,7 @@ export default class Controller {
 
   init(){
     this.model.init();
+    this.view.init();
     this.model.subscribe(this.renderView.bind(this));
   }
 
