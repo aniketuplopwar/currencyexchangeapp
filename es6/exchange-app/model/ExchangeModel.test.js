@@ -1,77 +1,41 @@
 import {createMockService} from '../../testHelper/testHelper';
 import ExchangeModel from './ExchangeModel';
-describe('Exchange Model', ()=>{
-    let exchangeModel,
-        service;
 
-    beforeAll(()=>{
-        service = createMockService();
-        exchangeModel = new ExchangeModel(service);
-        exchangeModel.init();
+describe('Exchange Model', ()=>{
+    let exchangeModel;
+
+    beforeEach(()=>{
+        exchangeModel = new ExchangeModel();
     })
 
     it('should create a new entry in currencyPairMap  when a new entry is received',()=>{
-        let newState = {};
-        const subscriber = jest.fn().mockImplementation((state)=>{
-            newState = state;
-        });
-        exchangeModel.subscribe(subscriber);
-        service.onMessage({body:'{"name": "gbpusd", "bestBid": 1, "bestAsk": 2  }'});
+        const updatedModel = exchangeModel.update({body:'{"name": "gbpusd", "bestBid": 1, "bestAsk": 2  }'});
 
-        expect(subscriber).toHaveBeenCalled();
-        expect(Object.keys(newState.currencyPairMap).length).toBe(1);
+        expect(Object.keys(updatedModel).length).toBe(1);
 
-    });
-
-    it('should update an entry in currencyPairMap  when the received entry is already present in the map',()=>{
-        let newState = {};
-        const subscriber = jest.fn().mockImplementation((state)=>{
-            newState = state;
-        });
-        exchangeModel.subscribe(subscriber);
-        service.onMessage({body:'{"name": "gbpusd", "bestBid": 1, "bestAsk": 2  }'});
-        service.onMessage({body:'{"name": "gbpusd", "bestBid": 2, "bestAsk": 2  }'});
-
-        expect(Object.keys(newState.currencyPairMap).length).toBe(1);
-        expect(newState.currencyPairMap.gbpusd.bestBid).toBe(2);
     });
 
     it('should update currencyPairArray whenever currencyPairMap is updated', ()=>{
-        let newState = {};
-        const subscriber = jest.fn().mockImplementation((state)=>{
-            newState = state;
-        });
-        exchangeModel.subscribe(subscriber);
-        service.onMessage({body:'{"name": "gbpusd"}'});
 
-        expect(newState.currencyPairArray.length).toBe(1);
+        const updatedModel = exchangeModel.update({body:'{"name": "gbpusd"}'});
+
+        expect(updatedModel.length).toBe(1);
     });
 
     it('should calculate and store the mid price as avg of bestBid and bestAsk in entry under currencyPairMap when information is received', ()=>{
-        exchangeModel = new ExchangeModel(service);
-        exchangeModel.init();
-        let newState = {};
-        const subscriber = jest.fn().mockImplementation((state)=>{
-            newState = state;
-        });
-        exchangeModel.subscribe(subscriber);
-        service.onMessage({body:'{"name": "gbpusd", "bestBid": 2.0, "bestAsk": 4.0}'});
-        const midPriceArr = newState.currencyPairMap['gbpusd']['midPrice'];
+        const updatedModel = exchangeModel.update({body:'{"name": "gbpusd", "bestBid": 2.0, "bestAsk": 4.0}'});
+        const midPriceArr = updatedModel[0]['midPrice'];
+
+        expect(updatedModel[0].name).toBe('gbpusd');
         expect(midPriceArr.length).toBe(1);
         expect(Math.floor(midPriceArr[0])).toBe(3);
     });
 
-    it('should update the mid price array and add a new entry  for the pair of currencty when information is received', ()=>{
-        exchangeModel = new ExchangeModel(service);
-        exchangeModel.init();
-        let newState = {};
-        const subscriber = jest.fn().mockImplementation((state)=>{
-            newState = state;
-        });
-        exchangeModel.subscribe(subscriber);
-        service.onMessage({body:'{"name": "gbpusd", "bestBid": 2.0, "bestAsk": 4.0}'});
-        service.onMessage({body:'{"name": "gbpusd", "bestBid": 6.0, "bestAsk": 4.0}'});
-        const midPriceArr = newState.currencyPairMap['gbpusd']['midPrice'];
+    it('should update the mid price array and add a new entry  for the pair of currency when information is received', ()=>{
+        let updatedModel ;
+        updatedModel = exchangeModel.update({body:'{"name": "gbpusd", "bestBid": 2.0, "bestAsk": 4.0}'});
+        updatedModel = exchangeModel.update({body:'{"name": "gbpusd", "bestBid": 6.0, "bestAsk": 4.0}'});
+        const midPriceArr = updatedModel[0]['midPrice'];
 
         expect(midPriceArr.length).toBe(2);
         expect(Math.floor(midPriceArr[0])).toBe(3);
@@ -79,36 +43,22 @@ describe('Exchange Model', ()=>{
     });
 
     it('should store mid price with time stamp when receive a row information', ()=>{
-        exchangeModel = new ExchangeModel(service);
-        exchangeModel.init();
-        let newState = {};
-        const subscriber = jest.fn().mockImplementation((state)=>{
-            newState = state;
-        });
-        exchangeModel.subscribe(subscriber);
-        service.onMessage({body:'{"name": "gbpusd", "bestBid": 2.0, "bestAsk": 4.0}'});
-        service.onMessage({body:'{"name": "gbpusd", "bestBid": 6.0, "bestAsk": 4.0}'});
-        const midPriceWithTimeStampArr = newState.currencyPairMap['gbpusd']['midPriceWithTimeStamp'];
+        let updatedModel ;
+        updatedModel = exchangeModel.update({body:'{"name": "gbpusd", "bestBid": 2.0, "bestAsk": 4.0}'});
+        updatedModel = exchangeModel.update({body:'{"name": "gbpusd", "bestBid": 6.0, "bestAsk": 4.0}'});
+        const midPriceWithTimeStampArr = updatedModel[0]['midPriceWithTimeStamp'];
 
         expect(midPriceWithTimeStampArr.length).toBe(2);
         expect(typeof midPriceWithTimeStampArr[0]['timestamp']).toBe('number');
     });
 
     it('should remove mid price which was present more than prescribed time',()=>{
-        exchangeModel = new ExchangeModel(service);
-        exchangeModel.init();
-        let newState = {};
-        const subscriber = jest.fn().mockImplementation((state)=>{
-            newState = state;
-        });
-        exchangeModel.subscribe(subscriber);
-
-        service.onMessage({body:'{"name": "gbpusd", "bestBid": 2.0, "bestAsk": 4.0}'});
-
+        let updatedModel ;
+        updatedModel = exchangeModel.update({body:'{"name": "gbpusd", "bestBid": 2.0, "bestAsk": 4.0}'});
         let timeAtTheTimeOfInsertion = new Date().getTime();
         let currentTime = timeAtTheTimeOfInsertion + 101;
         exchangeModel.filterMidPrice(currentTime, 100);
-        const midPriceWithTimeStampArr = newState.currencyPairMap['gbpusd']['midPriceWithTimeStamp'];
+        const midPriceWithTimeStampArr = updatedModel[0]['midPriceWithTimeStamp'];
 
         expect(midPriceWithTimeStampArr.length).toBe(0);
 

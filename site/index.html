@@ -5,8 +5,96 @@
 </head>
 <body>
 
-    <section class="content" id="table-container">
-   </section>
+<section class="content">
+    <header>
+        <h2>Currency Exchange Table</h2>
+        <h3>Solution</h3>
+    </header>
+    <section  id="table-container" class="table-container">
+    </section>
+</section>
+
+<section class="content">
+        <h2> High Level description of implementation </h2>
+        <div>
+            <p> Below is the Design diagram to explain the design</p>
+            <p>
+                <img src="./DesignOverview.png"/>
+            </p>
+
+            <p>
+                This implementation consists of 4 high level components
+                <ul>
+                    <li>Service</li>
+                    <li>View</li>
+                    <li>Model</li>
+                    <li>App</li>
+                </ul>
+                <section id="service">
+                    <h3><u>Service</u></h3>
+                    <p>
+                        Service is responsible for interacting with server on socket and the given topic, and return updates to App.
+                        On initialization it makes a socket connection to the server using stomp and subscribe to topic '/fx/prices'
+                    </p>
+                </section>
+                <section id="view">
+                    <h3><u>View</u></h3>
+                    <p> View is responsible build the exchange table, and add/update the table content whenever App sends an update</p>
+                </section>
+                <section id="model">
+                    <h3><u>Model</u></h3>
+                    <p>
+                        Model is responsible to translate the messages coming from service to make it compatible to the view,
+                        Also it holds the previous values to make a list of midPrice,
+                        so that sparkline graph can be drawn on midPrice values, over last 30 seconds.
+                    </p>
+                </section>
+                <section id="app">
+                    <h3><u>App</u></h3>
+                    <p>
+                        App is the integrating point for above 3 components.
+                        App subscribes to the service for updates. Sends update to Model to get transalated message.
+                        Calls view`s update to render the update received.
+                    </p>
+                </section>
+
+
+            </p>
+        </div>
+</section>
+<section class="content">
+    <h2>Libraries Used/Added</h2>
+    <p>
+        <ul>
+            <li>
+                Jest:  for JS/ES6 testing
+            </li>
+
+            <li>
+                Jquey:  for DOM testing
+            </li>
+        </ul>
+    </p>
+</section>
+
+<section class="content">
+    <h2>Contact Information</h2>
+    <p>
+    <ul>
+        <li>
+            <strong>Name:</strong> Aniket Uplopwar
+        </li>
+
+        <li>
+            <strong>Email:</strong> aniket.uplopwar@gmail.com
+        </li>
+
+        <li>
+            <strong>Phone number:</strong> 7798678800
+        </li>
+    </ul>
+    </p>
+</section>
 
 <script src="bundle.js"></script>
 </body>

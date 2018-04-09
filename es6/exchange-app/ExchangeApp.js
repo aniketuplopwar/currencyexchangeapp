@@ -1,15 +1,21 @@
 import ExchangeModel from './model/ExchangeModel';
-import ExchangeView from  './view/ExchangeView';
-import Controller from '../framework/Controller'
-import ServiceFactory from '../services/ServiceFactory';
+import ExchangeTable from './components/ExchangeTable';
+import SparklineGraph from "./components/SparklineGraph";
+import ServiceFactory from './services/ServiceFactory';
 
 export default class ExchangeApp {
-    init(){
-        const service = ServiceFactory.getExchangeServiceInstance();
-        const model = new ExchangeModel(service);
-        const view = new ExchangeView('table-container');
-        const controller =  new Controller(model, view);
+    constructor(){
+        this.view = new ExchangeTable(document.getElementById('table-container'), new SparklineGraph());
+        this.model= new ExchangeModel();
+        this.service = ServiceFactory.getExchangeServiceInstance();
+    }
 
-        controller.init()
+    init(){
+        this.service.init();
+        this.view.init();
+
+        this.service.subscribe((message)=>{
+            this.view.update(this.model.update(message));
+        });
     }
 }

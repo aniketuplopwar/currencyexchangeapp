@@ -1,6 +1,6 @@
-import SocketConection from './SocketConnection';
+import SocketConection from './SocketConnection/index';
 import StompConfig from './SocketConnection/StompConfig';
-import Service from '../framework/Service';
+import ExchangeService from './ExchangeService/ExchangeService';
 
 let stompInstance,
     exchangeServiceInstance;
@@ -16,7 +16,7 @@ class ServiceFactory {
 
     static getExchangeServiceInstance(){
         if(!exchangeServiceInstance){
-            exchangeServiceInstance = new Service(ServiceFactory.getStompInstance(), '/fx/prices');
+            exchangeServiceInstance = new ExchangeService(ServiceFactory.getStompInstance(), '/fx/prices');
         }
         return exchangeServiceInstance;
     }
